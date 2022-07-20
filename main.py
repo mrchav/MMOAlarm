@@ -37,6 +37,7 @@ class EveChars():
     #скриншот игрового экрана чара
     def getScreenData(self):
         # Замените hwnd на WindowLong
+
         s = win32gui.GetWindowLong(self.windowhwnd, win32con.GWL_EXSTYLE)
         win32gui.SetWindowLong(self.windowhwnd, win32con.GWL_EXSTYLE, s | win32con.WS_EX_LAYERED)
 
@@ -169,6 +170,18 @@ class EveChars():
         self.getLocation()
         #self.getCharSystem()
 
+    def checkCharOnline(self):
+        try:
+            win32gui.GetWindowDC(self.windowhwnd)
+        except:
+            print(f'Задача {self.charname} - {self.windowhwnd} чар куда-то пропал!!')
+
+            return False
+
+        return True
+
+
+
 # Ники всех активных чаров переводим в список.
 def allActiveChars(chars):
     char_list = list()
@@ -210,6 +223,12 @@ if __name__ == '__main__':
             win32gui.EnumWindows(winEnumHandler, None)
 
         for char in chars:                                  # Для каждого активного чара
+            # Проверяем, не закры ли ли клиент с данным чаром.
+            if char.checkCharOnline() == False:
+                chars.remove(char)
+                break
+
+
             if char.nextcheck < datetime.datetime.now():    # Если пришло время для обновления
                 char.updateData()                           # Обновляем данные чара
                 if char.location == 'space':                # Если чар сейчас в космосе
