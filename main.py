@@ -101,8 +101,8 @@ class EveChars():
 
             #скрин экрана клиента переводим в RBG формат и обрезаем
             large_image = cv2.cvtColor(self.getScreenData(), cv2.COLOR_BGR2RGB)
-            large_image = large_image[int(self.height/4):int(self.top/2) + self.height,
-                          30:0 + int(self.width/2)]
+            large_image = large_image[100:self.height,
+                          0:0 + int(self.width-200)]
 
             #Результат поиска таргет картинки на скрине экрана, записываем все результаты в массив
             result = cv2.matchTemplate(target_img, large_image, method)
